@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% from "_macros.html" import rating, cover %}
+{% block title %}Restaurantes · {{ app_name }}{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <p class="hero-eyebrow">Puebla y alrededores</p>
+  <h1>Restaurantes populares</h1>
+  <p class="hero-sub">Descubre dónde comer en tu zona: filtra por ciudad, categoría y precio.</p>
+</section>
+
+<form class="filters" method="get" action="/">
+  <div class="field">
+    <label for="city">Ciudad</label>
+    <input id="city" name="city" list="city-list" value="{{ filters.city }}" placeholder="Ej. Puebla">
+    <datalist id="city-list">
+      {% for c in cities %}<option value="{{ c }}">{% endfor %}
+    </datalist>
+  </div>
+  <div class="field">
+    <label for="category">Categoría</label>
+    <input id="category" name="category" list="category-list" value="{{ filters.category }}" placeholder="Ej. Mexicana">
+    <datalist id="category-list">
+      {% for c in categories %}<option value="{{ c }}">{% endfor %}
+    </datalist>
+  </div>
+  <div class="field">
+    <label for="price">Precio</label>
+    <select id="price" name="price">
+      <option value="">Todos</option>
+      {% for value, label in price_labels.items() %}
+        <option value="{{ value }}" {{ "selected" if filters.price == value }}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="field">
+    <label for="order_by">Ordenar por</label>
+    <select id="order_by" name="order_by">
+      <option value="name" {{ "selected" if filters.order_by == "name" }}>Nombre (A-Z)</option>
+      <option value="avgRating" {{ "selected" if filters.order_by == "avgRating" }}>Mejor calificación</option>
+    </select>
+  </div>
+  <div class="filter-actions">
+    <button class="btn btn-primary" type="submit">Filtrar</button>
+    <a class="btn" href="/">Limpiar</a>
+  </div>
+</form>
+
+{% if restaurants %}
+  <section class="grid">
+    {% for r in restaurants %}
+      <article class="card">
+        {{ cover(r) }}
+        <div class="card-body">
+          <h2>{{ r.name }}</h2>
+          <p class="meta">{{ r.category }} · {{ r.city }}</p>
+          <p class="meta">
+            <span class="price">{{ price_labels.get(r.price, "") }}</span>
+            {{ rating(r) }}
+          </p>
+          <a class="btn btn-primary" href="/restaurants/{{ r.id }}">Ver detalles</a>
+        </div>
+      </article>
+    {% endfor %}
+  </section>
+
+  <nav class="pager" aria-label="Paginación">
+    {% if has_prev %}<a class="btn" href="/">« Primera página</a>{% endif %}
+    {% if next_url %}<a class="btn" href="{{ next_url }}">Siguiente »</a>{% endif %}
+  </nav>
+{% else %}
+  <p class="empty">No hay restaurantes con esos filtros. <a href="/restaurants/new">Registra el primero</a>.</p>
+{% endif %}
+{% endblock %}

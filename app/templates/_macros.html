@@ -1,0 +1,15 @@
+{% macro rating(restaurant) -%}
+  {%- if restaurant.numRatings and restaurant.numRatings > 0 -%}
+    <span class="rating">★ {{ "%.1f"|format(restaurant.avgRating) }} <small>({{ restaurant.numRatings }})</small></span>
+  {%- else -%}
+    <span class="rating rating-empty">Sin calificaciones</span>
+  {%- endif -%}
+{%- endmacro %}
+
+{% macro cover(restaurant, extra_class="") -%}
+  {%- if restaurant.photoUrl -%}
+    <img class="cover {{ extra_class }}" src="{{ restaurant.photoUrl }}" alt="Foto de {{ restaurant.name }}" loading="lazy">
+  {%- else -%}
+    <div class="cover placeholder {{ extra_class }}" aria-hidden="true">{{ restaurant.name[:1] }}</div>
+  {%- endif -%}
+{%- endmacro %}

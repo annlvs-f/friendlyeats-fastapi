@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% from "_macros.html" import rating, cover %}
+{% block title %}{{ restaurant.name }} · {{ app_name }}{% endblock %}
+
+{% block content %}
+<a class="back" href="/">← Volver al listado</a>
+
+<article class="detail">
+  {{ cover(restaurant, "cover-large") }}
+  <div class="detail-body">
+    <h1>{{ restaurant.name }}</h1>
+    <dl class="info">
+      <dt>Categoría</dt><dd>{{ restaurant.category }}</dd>
+      <dt>Ciudad</dt><dd>{{ restaurant.city }}</dd>
+      <dt>Precio</dt><dd class="price">{{ price_labels.get(restaurant.price, "") }}</dd>
+      <dt>Calificación</dt><dd>{{ rating(restaurant) }}</dd>
+    </dl>
+
+    <div class="actions">
+      <a class="btn btn-primary" href="/restaurants/{{ restaurant.id }}/edit">Editar</a>
+      <button class="btn btn-danger" type="button"
+              data-delete-id="{{ restaurant.id }}"
+              data-name="{{ restaurant.name }}">Eliminar</button>
+    </div>
+    <p id="message" class="message" role="status" aria-live="polite"></p>
+  </div>
+</article>
+{% endblock %}

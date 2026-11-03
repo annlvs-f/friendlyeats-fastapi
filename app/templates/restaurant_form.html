@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{{ "Editar" if restaurant else "Nuevo" }} restaurante · {{ app_name }}{% endblock %}
+
+{% block content %}
+<a class="back" href="{{ '/restaurants/' ~ restaurant.id if restaurant else '/' }}">← Cancelar</a>
+
+<h1>{{ "Editar" if restaurant else "Nuevo" }} restaurante</h1>
+
+<form id="restaurant-form" class="form" novalidate {% if restaurant %}data-id="{{ restaurant.id }}"{% endif %}>
+  <div class="field">
+    <label for="name">Nombre</label>
+    <input id="name" name="name" required maxlength="100" value="{{ restaurant.name if restaurant else '' }}">
+  </div>
+  <div class="field">
+    <label for="category">Categoría</label>
+    <input id="category" name="category" required maxlength="50" list="category-list" autocomplete="off"
+           placeholder="Elige una o escribe una nueva"
+           value="{{ restaurant.category if restaurant else '' }}">
+    <datalist id="category-list">
+      {% for c in categories %}<option value="{{ c }}">{% endfor %}
+    </datalist>
+  </div>
+  <div class="field">
+    <label for="city">Ciudad</label>
+    <input id="city" name="city" required maxlength="50" list="city-list" autocomplete="off"
+           placeholder="Elige una o escribe una nueva"
+           value="{{ restaurant.city if restaurant else '' }}">
+    <datalist id="city-list">
+      {% for c in cities %}<option value="{{ c }}">{% endfor %}
+    </datalist>
+  </div>
+  <div class="field">
+    <label for="price">Precio</label>
+    <select id="price" name="price" required>
+      {% for value, label in price_labels.items() %}
+        <option value="{{ value }}" {{ "selected" if restaurant and restaurant.price == value }}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="field">
+    <label for="photoUrl">URL de imagen (opcional)</label>
+    <input id="photoUrl" name="photoUrl" type="url" placeholder="https://…"
+           value="{{ restaurant.photoUrl if restaurant and restaurant.photoUrl else '' }}">
+  </div>
+
+  <button class="btn btn-primary" type="submit">Guardar</button>
+</form>
+<p id="message" class="message" role="status" aria-live="polite"></p>
+{% endblock %}
