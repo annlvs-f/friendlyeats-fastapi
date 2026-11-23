@@ -11,3 +11,4 @@ ui-debug.log
 .firebase/
 .agents/
 skills-lock.json
+emulator-data/
